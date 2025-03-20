@@ -1,0 +1,26 @@
+-- Queries do desafio
+
+-- Mostre quais produtos teve uma quantidade exigida superior ou igual a 3, ordenando em ordem crescente.
+select p.Pnome, pp.ppQuantidade
+	from produto as p join produtopedido as pp
+    on p.idProduto = pp.id_Produto
+	where ppQuantidade>=3; 
+
+-- Mostre informações mais completa do pedido com as colunas (id do cliente, status do pedido, frete, tipo de pagamento e o código de rastreio)
+select p.idPedidoCliente, p.StatusPedido, p.frete, pa.tipopagamento, e.codigo_rastreio
+	from pedido as p 
+    join pagamento as pa on p.id_Pagamento = pa.idPagamento
+    join entrega as e on p.id_Entrega = e.idEntrega;
+
+-- Quantos produtos tem em cada categoria, ordenando de forma decrescente?
+select p.Categoria, count(*) as Qtd_Produtos
+	from produto as p 
+    group by Categoria 
+    order by Qtd_produtos;
+
+-- Informe quantos produtos tem uma avaliação maior que 3
+select Avaliacao, count(*) as Qtd_Produto
+	from produto 
+    group by avaliacao
+    having Avaliacao > 3
+    order by Avaliacao;

@@ -1,0 +1,145 @@
+-- Projeto DIO - Ecommerce
+
+create database ecommerce;
+use ecommerce;
+create table cliente(
+idCliente int auto_increment primary key,
+Fnome varchar(10) not null,
+Minit varchar(3),
+Lname varchar(20),
+Endereco varchar(100)
+);
+alter table cliente auto_increment=1;
+alter table cliente drop column CPF;
+alter table cliente 
+add column Tipo_Cliente enum('PJ','PF') not null;
+
+
+desc cliente;
+-- Tamanho - Dimensão do produto
+create table produto(
+idProduto int auto_increment primary key,
+Pnome varchar(50),
+Classficacao_kids bool default false,
+Categoria enum('Eletrônico','Vestimenta','Brinquedos','Alimentos','Móveis') not null,
+Descricao varchar(45),
+Avaliacao float default 0,
+Tamanho varchar(6)
+);
+
+create table pagamento(
+id_Cliente int,
+idPagamento int auto_increment primary key,
+TipoPagamento enum('Pix','Cartão Crédito','Boleto') not null,
+Limite float,
+foreign key (id_Cliente) references cliente(idCliente)
+);
+
+create table pedido(
+idPedido int auto_increment primary key,
+idPedidoCliente int,
+StatusPedido enum('Cancelado','Confirmado','Em processamento','Enviado','Entregue') default 'Em processamento', 
+DescricaoPedido varchar(255),
+Frete float default 10,
+Pagamento_Boleto boolean default false,
+foreign key (idPedidoCliente) references cliente(idCliente) on update cascade
+);
+
+alter table pedido 
+add column id_Pagamento int,
+add foreign key (id_Pagamento) references pagamento(idPagamento);
+
+alter table pedido
+add column id_Entrega int,
+add foreign key (id_Entrega) references entrega (idEntrega);
+
+desc pedido;
+
+create table estoque(
+idEstoque int auto_increment primary key,
+Local_Estoque varchar(50),
+Quantidade int default 0
+);
+
+create table fornecedor(
+idFornecedor int auto_increment primary key,
+RazaoSocial varchar(45) not null,
+CNPJ char(15) not null unique,
+Contato char(11) not null
+);
+-- desc fornecedor;
+
+create table vendedor (
+idVendedor int auto_increment primary key,
+RazaoSocial varchar(45) not null,
+NomeFantasia varchar(50),
+CNPJ char(15) unique,
+CPF char(9) unique,
+Local varchar(100),
+Contato char(11) not null
+);
+
+desc vendedor;
+
+-- São necessárias duas chaves primárias, pois é uma tabela de relação entre outras duas tabelas
+create table produtoVendedor(
+idPVendedor int,
+id_Produto int,
+Quantidade int default 1,
+primary key(idPVendedor, id_Produto),
+foreign key (idPVendedor) references vendedor (idVendedor),
+foreign key (id_Produto) references produto (idProduto)
+);
+
+-- desc produtoVendedor;
+
+create table produtoPedido(
+id_Produto int,
+id_Pedido int,
+ppQuantidade int default 1,
+ppStatus enum('Disponível','Sem estoque'),
+primary key (id_Produto,id_Pedido),
+foreign key (id_Produto) references produto(idProduto),
+foreign key (id_Pedido) references pedido (idPedido)
+);
+
+create table produtoEstoque (
+id_Produto int,
+id_Estoque int,
+peLocal varchar(50) not null,
+primary key (id_Produto, id_Estoque),
+foreign key (id_Produto) references produto(idProduto),
+foreign key (id_Estoque) references estoque(idEstoque)
+);
+
+create table produtoFornecedor(
+id_Produto int,
+id_Fornecedor int,
+quantidade int not null,
+primary key(id_Produto, id_Fornecedor),
+foreign key (id_Produto) references produto(idProduto),
+foreign key (id_Fornecedor) references fornecedor(idFornecedor)
+);
+-- desc produtofornecedor;
+
+create table entrega(
+idEntrega int auto_increment primary key,
+StatusEntrega enum('Entregue','Processando'),
+Codigo_Rastreio varchar(20)
+);
+
+create table cliente_pj(
+idClientePJ int auto_increment primary key,
+id_Cliente int,
+CNPJ char(15) not null unique,
+foreign key (id_Cliente) references cliente(idCliente)
+);
+
+create table cliente_pf(
+idClientePF int auto_increment primary key,
+id_Cliente int,
+CPF char(11) not null unique,
+foreign key (id_Cliente) references cliente(idCliente)
+);
+
+-- show tables;

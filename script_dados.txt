@@ -1,0 +1,130 @@
+-- Inserindo dados
+
+-- Cliente: Fnome, Minit, Lname, Endereco, Tipo_Cliente(PJ ou PF)
+insert into cliente(Fnome, Minit, Lname, Endereco, Tipo_Cliente)
+	values('Maria','M','Silva', 'Rua Silva de Prata 29, Carangola - Cidade das Flores','PF'),
+		  ('Matheus','O','Pimentel','Rua Alameda 289, Centro - São Paulo','PF'),
+          ('Ricardo','F','Silva','Rua Alameda Vinha 1009, Centro - São Paulo','PJ'),
+          ('Julia','S','França','Rua Laranjeiras 246, Teresópolis - Rio de Janeiro','PF'),
+          ('Roberta','G','Assis', 'Avenida Koller 17, Pinheiros - São Paulo','PJ'),
+          ('Mariano','A','Souza','Rua dos Jardins, Olímpico - São Caetano do Sul','PF');
+select * from cliente;
+
+-- Produto: Pnome, Classificacao_kids (bool), Categoria enum('Eletrônico','Vestimenta','Brinquedos','Alimentos','Móveis'), descricao
+-- avaliação, tamanho
+insert into produto(Pnome, Classficacao_kids, Categoria, Avaliacao, Tamanho)
+	values ('Fone de ouvido',false,'Eletrônico',4,null),
+           ('Barbie Elsa',true, 'Brinquedos',3,null),
+           ('Body',false,'Vestimenta',5,null),
+           ('Prateleira',false,'Móveis',4,null),
+           ('Farinha de arroz',false,'Alimentos',3,null),
+           ('Carro hotwheels', true,'Brinquedos',5,null),
+           ('Microfone',false,'Eletrônico',2,null);
+select * from produto;
+
+-- Pagamento: id_Cliente, TipoPagamento enum('Pix','Cartão Crédito','Boleto'), Limite
+insert into pagamento(id_cliente, tipopagamento, limite)
+	values (3,'Boleto',50000),
+		   (6,'Pix','1000'),
+           (1,'Cartão Crédito',3500),
+           (3,'Boleto',50000),
+           (4,'Pix',4000),
+           (5,'Boleto',30000),
+           (2,'Cartão Crédito',2000);
+select * from pagamento;
+
+-- Pedido: idPedidoCliente, StatusPedido enum('Cancelado','Confirmado','Em processamento','Enviado','Entregue'), DescricaoPedido,
+-- frete, Pagamento_Boleto (boolean), id_pagamento, id_entrega) 
+insert into pedido(idPedidoCliente,StatusPedido, DescricaoPedido,Frete,Pagamento_Boleto,id_pagamento,id_entrega)
+	values(2,'Entregue','pagamento via site',12.9,false,7,3),
+          (3,'Confirmado','pagamento via app',26.7,true,1,5),
+          (5,'Enviado','pagamento via app',24.3,true,6,7),
+          (6,'Entregue','pagamento via site',5.6,false,2,4),
+          (3,'Entregue','pagamento via app',26.7,true,4,1),
+          (1,'Enviado','pagamento via site',11.9,false,3,2),
+          (4,'Em processamento','pagamento via app',false,3.8,5,6);
+select * from pedido;
+
+-- Estoque: Local_Estoque, quantidade
+insert into estoque(Local_Estoque, quantidade)
+	values ('Rua das pratas 89 - Minas Gerais',560),
+           ('Rua Japão 34 - Taboão da Serra', 120),
+           ('Avenida 13 de maio - São Paulo',372);
+select * from estoque;
+
+-- Fornecedor: RazaoSocial, CNPJ, Contato
+insert into fornecedor (RazaoSocial,CNPJ,Contato)
+	values('Kaisan',67100287468041,1564988532),
+          ('Dinho Distribuidora','67400277749816','1187110274'),
+          ('Multilaser','50047722198034','1341202574');
+select * from fornecedor;
+
+-- Vendedor: RazaoSocial, NomeFantasia, CNPJ, CPF, Local, Contato
+insert into vendedor (RazaoSocial, NomeFantasia, CNPJ, CPF,Contato)
+	values('POLIMPORT - COMERCIO E EXPORTACAO LTDA','Polishop',00436042016092,631470024,1564988532),
+          ('MAGAZINE LUIZA S/A','Magazine Luiza',47960950000121,966470744,1123055087),
+          ('AMAZON SERVICOS DE VAREJO DO BRASIL LTDA','Amazon',15436940002068,554702471,1456320041);
+ select * from vendedor;
+ 
+-- ProdutoVendedor: idPVendedor, id_Produto, Quantidade
+insert into produtovendedor(idpvendedor,id_produto,quantidade)
+	values(4,4,2),
+		  (5,5,10),
+          (4,2,5),
+          (6,1,1),
+          (5,7,12),
+          (4,6,5),
+          (6,3,7);
+select * from produtovendedor;
+
+-- ProdutoPedido: id_Produto, id_pedido, ppQuantidade, ppStatus
+insert into produtopedido (id_Produto,id_pedido,ppQuantidade,ppStatus)
+	values(5,4,4,'Disponível'),
+          (3,5,3,'Sem estoque'),
+          (2,1,2,'Disponível'),
+          (1,7,1,'Disponível'),
+          (4,2,1,'Disponível'),
+          (6,3,5,'Disponível'),
+          (7,6,6,'Sem estoque');
+select * from produtopedido;
+
+-- ProdutoEstoque: id_produto, id_estoque, peLocal
+insert into produtoestoque(id_produto,id_estoque,peLocal)
+	values (2,1,'Rua das pratas 89 - Minas Gerais'),
+           (4,2,'Rua Japão 34 - Taboão da Serra'),
+           (3,2,'Rua Japão 34 - Taboão da Serra'),
+           (7,3,'Avenida 13 de maio - São Paulo');
+select * from produtoestoque;
+
+-- ProdutoFornecedor: id_produto, id_fornecedor, quantidade
+insert into produtofornecedor(id_produto,id_fornecedor,quantidade)
+	values(1,2,4),
+          (5,3,3),
+          (6,3,1);
+select * from produtofornecedor;
+
+-- Entrega: StatusEntrega enum('Entregue','Processando'), Codigo_Rastreio
+insert into entrega(StatusEntrega,Codigo_Rastreio)
+	values('Processando','N66854G'),
+          ('Processando','GH6578'),
+          ('Entregue','F754D7'),
+          ('Entregue','DG5688'),
+          ('Processando','SF35562'),
+          ('Processando','HH6743'),
+          ('Entregue','NB6733');
+          
+select * from entrega;
+
+-- Cliente_pj: id_cliente, cnpj
+insert into cliente_pj (id_cliente,cnpj)
+	values (3,63477205987415),
+           (5,66452108749871);
+select * from cliente_pj;
+
+-- Cliente_pf: id_cliente, cpf
+insert into cliente_pf (id_cliente,cpf)
+	values(1,54720118796),
+          (2,35413278447),
+          (4,20004589715),
+          (6,67887451152);
+select * from cliente_pf;
